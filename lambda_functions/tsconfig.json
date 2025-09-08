@@ -1,0 +1,21 @@
+{
+    "compilerOptions": {
+      "target": "ES2020",
+      "module": "commonjs",
+      "outDir": "dist",
+      "rootDir": ".",
+      "esModuleInterop": true,
+      "strict": true,
+      "skipLibCheck": true,
+      "baseUrl": ".",
+    },
+    "include": [
+      "get-round/**/*",
+      "round-results/**/*",
+      "word-bank-ingestion/**/*",
+    ],
+    "exclude": [
+      "dist",
+      "build"
+    ]
+}
