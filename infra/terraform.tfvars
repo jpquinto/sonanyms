@@ -1,8 +1,8 @@
-aws_region = "us-west-2"
+aws_region = "us-west-1"
 
 project_name      = "sonanyms"
 project_namespace = "jeremy"
-environment       = "dev"
-stage             = "dev"
+environment       = "prod"
+stage             = "prod"
 owner             = "Jeremy Quinto"
 developer         = "Jeremy Quinto"

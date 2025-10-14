@@ -6,6 +6,10 @@ output "bucket_arn" {
   value = aws_s3_bucket.s3.arn
 }
 
+output "bucket_id" {
+  value = aws_s3_bucket.s3.id
+}
+
 output "bucket_domain_name" {
   value = var.enable_website_configuration ? aws_s3_bucket_website_configuration.website_configuration[0].website_domain : null
 }
