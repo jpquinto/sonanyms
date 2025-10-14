@@ -1,12 +1,8 @@
-variable "label_context" {
+variable "context" {
   description = "Null label context"
   type        = any
 }
 
-variable "aws_region" {
-  description = "Target region, usage: us-east-1"
-  type        = string
-}
 
 variable "api_name" {
   description = "Name of the api"
@@ -19,18 +15,20 @@ variable "stage_name" {
 }
 
 variable "http_routes" {
-  description = "List of HTTP methods and paths"
+  description = "A list of HTTP routes to create for the API Gateway."
   type = list(object({
-    http_method           = string
-    path                  = string
-    integration_type      = string
-    dynamodb_table_name   = optional(string)
-    execution_role_arn    = optional(string)
-    lambda_invoke_arn     = optional(string)
-    lambda_function_name  = optional(string)
-    use_authorizer        = optional(bool)
-    enable_cors_all       = optional(bool)
-    cognito_user_pool_arn = optional(string)
+    http_method          = string
+    path                 = string
+    parent_path          = optional(string)
+    integration_type     = string
+    lambda_invoke_arn    = string
+    lambda_function_name = string
+    dynamodb_table_name  = optional(string)
+    execution_role_arn   = optional(string)
+    enable_cors_all      = bool
+    use_authorizer       = bool
+    cache_key_parameters = optional(list(string), [])
+    request_parameters   = optional(map(bool))
   }))
 }
 
@@ -44,6 +42,12 @@ variable "api_type" {
   }
 }
 
+variable "vpc_endpoint_ids" {
+  description = "Private API GW related VPC endpoints ids"
+  type        = list(string)
+  default     = null
+}
+
 variable "lambda_authorizer" {
   description = "Lambda authorizer configuration"
   type = object({
@@ -54,6 +58,15 @@ variable "lambda_authorizer" {
   })
   default = null
 }
+
+variable "cognito_authorizer" {
+  description = "Cognito authorizer configuration"
+  type = object({
+    user_pool_arn = string
+  })
+  default = null
+}
+
 # API KEY
 
 variable "enable_api_key" {

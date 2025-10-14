@@ -10,8 +10,8 @@
       "baseUrl": ".",
     },
     "include": [
-      "base_api_gw/get-round/**/*",
-      "base_api_gw/round-results/**/*",
+      "base_api_gw/**/*",
+      "websocket_api_gw/**/*",
       "word_bank_ingestion/**/*",
     ],
     "exclude": [
