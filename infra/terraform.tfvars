@@ -1,6 +1,6 @@
 aws_region = "us-west-2"
 
-project_name      = "sonanyms-infrastructure"
+project_name      = "sonanyms"
 project_namespace = "jeremy"
 environment       = "dev"
 stage             = "dev"
