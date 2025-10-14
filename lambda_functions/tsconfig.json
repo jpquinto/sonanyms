@@ -10,9 +10,9 @@
       "baseUrl": ".",
     },
     "include": [
-      "get-round/**/*",
-      "round-results/**/*",
-      "word-bank-ingestion/**/*",
+      "base_api_gw/get-round/**/*",
+      "base_api_gw/round-results/**/*",
+      "word_bank_ingestion/**/*",
     ],
     "exclude": [
       "dist",
