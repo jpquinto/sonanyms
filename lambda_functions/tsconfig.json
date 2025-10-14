@@ -1,0 +1,21 @@
+{
+    "compilerOptions": {
+      "target": "ES2020",
+      "module": "commonjs",
+      "outDir": "dist",
+      "rootDir": ".",
+      "esModuleInterop": true,
+      "strict": true,
+      "skipLibCheck": true,
+      "baseUrl": ".",
+    },
+    "include": [
+      "base_api_gw/**/*",
+      "websocket_api_gw/**/*",
+      "word_bank_ingestion/**/*",
+    ],
+    "exclude": [
+      "dist",
+      "build"
+    ]
+}
