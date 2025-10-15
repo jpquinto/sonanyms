@@ -70,38 +70,7 @@ export const handler = async (
       `Match found! ${username} matched with ${waitingPlayer.username}`
     );
 
-    // Send match_found message to both players at the same time
-    await Promise.all([
-      removeFromQueue(waitingPlayer.game_mode, waitingPlayer.time_joined),
-      sendWsMessage(
-        waitingPlayer.connection_id,
-        {
-          type: "match_found",
-          opponent: {
-            connection_id: connectionId,
-            username: username,
-            user_id: userId,
-            user_profile_image_url: profileImageUrl,
-          },
-        },
-        domainName,
-        stage
-      ),
-      sendWsMessage(
-        connectionId,
-        {
-          type: "match_found",
-          opponent: {
-            connection_id: waitingPlayer.connection_id,
-            username: waitingPlayer.username,
-            user_id: waitingPlayer.user_id,
-            user_profile_image_url: waitingPlayer.user_profile_image_url,
-          },
-        },
-        domainName,
-        stage
-      ),
-    ]);
+    await removeFromQueue(waitingPlayer.game_mode, waitingPlayer.time_joined),
 
     console.log(`Both players notified of match`);
 
@@ -133,7 +102,7 @@ export const handler = async (
     console.log(`Game session ${gameId} created with ${words.length} words`);
 
     // Set start timestamp 3 seconds in the future to give clients time to prepare
-    const startTimestamp = Date.now() + 3000;
+    const startTimestamp = Date.now() + 5000;
 
     // Send game_start message to both players
     await Promise.all([
@@ -144,6 +113,12 @@ export const handler = async (
           game_id: gameId,
           start_timestamp: startTimestamp,
           word: words[0],
+          opponent: {
+            connection_id: connectionId,
+            username: username,
+            user_id: userId,
+            user_profile_image_url: profileImageUrl,
+          }
         },
         domainName,
         stage
@@ -155,6 +130,12 @@ export const handler = async (
           game_id: gameId,
           start_timestamp: startTimestamp,
           word: words[0],
+          opponent: {
+            connection_id: waitingPlayer.connection_id,
+            username: waitingPlayer.username,
+            user_id: waitingPlayer.user_id,
+            user_profile_image_url: waitingPlayer.user_profile_image_url,
+          }
         },
         domainName,
         stage
