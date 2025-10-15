@@ -55,12 +55,12 @@ module "matchmaking_table" {
 
   billing_mode = "PAY_PER_REQUEST"
 
-  hash_key = "queue_id"
+  hash_key = "game_mode"
   range_key = "time_joined"
 
   attributes = [
     {
-      name = "queue_id"
+      name = "game_mode"
       type = "S"
     },
     {
@@ -82,24 +82,26 @@ module "game_sessions_table" {
   billing_mode = "PAY_PER_REQUEST"
 
   hash_key = "game_id"
+  range_key = "sort_key"
 
   attributes = [
     {
       name = "game_id"
       type = "S"
     },
-    # {
-    #   name = "game_status"
-    #   type = "S"
-    # },
-    # {
-    #   name = "player_a_username"
-    #   type = "S"
-    # },
-    # {
-    #   name = "player_b_username"
-    #   type = "S"
-    # },
+    {
+      name = "sort_key"
+      type = "S"
+    }
+  ]
+
+  global_secondary_indexes = [
+    {
+      name = "sort_key_index"
+      hash_key = "sort_key"
+      range_key = "game_id"
+      projection_type = "ALL"
+    }
   ]
 
   ttl_enabled = true
