@@ -1,6 +1,12 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
 import { sendWsMessage } from "./utils/send_ws_message";
-import { getGame, updatePlayerStatus, updateGame } from "./utils/db";
+import {
+  getGame,
+  updatePlayerStatus,
+  incrementFinishedCount,
+  resetRoundState,
+  updateGame,
+} from "./utils/db";
 
 interface Submission {
   word: string;
@@ -86,12 +92,43 @@ export const handler = async (
 
     const opponentConnectionId = opponentRecord.sort_key;
 
-    // Check if opponent has finished
-    const opponentFinished = opponentRecord.round_status === "finished";
+    // Step 1: Atomically update current player's status
+    const playerUpdateResult = await updatePlayerStatus(
+      gameId,
+      connectionId,
+      submissions,
+      currentRound
+    );
 
-    if (!opponentFinished) {
-      // Opponent hasn't finished yet - just update current player status
-      await updatePlayerStatus(gameId, connectionId, submissions, currentRound);
+    if (!playerUpdateResult) {
+      // Player already finished this round (shouldn't happen, but handle gracefully)
+      console.log(
+        `Player ${connectionId} already finished round ${currentRound}`
+      );
+      return {
+        statusCode: 200,
+        body: JSON.stringify({ message: "Already finished this round" }),
+      };
+    }
+
+    console.log(
+      `Player ${connectionId} successfully marked as finished for round ${currentRound}`
+    );
+
+    // Step 2: Atomically increment finished_players_count
+    // Only ONE of the two simultaneous requests will successfully increment from 1 to 2
+    const incrementResult = await incrementFinishedCount(gameId, currentRound);
+
+    if (!incrementResult.isLastPlayer) {
+      // We're the first player to finish - just wait
+      await sendWsMessage(
+        connectionId,
+        {
+          type: "waiting_for_opponent",
+        },
+        domainName,
+        stage
+      );
 
       console.log(
         `Player ${connectionId} finished round ${currentRound}, waiting for opponent`
@@ -106,26 +143,26 @@ export const handler = async (
       };
     }
 
-    // Both players finished - update game and move to next round
-    const updatedRecords = await updateGame(
-      gameId,
-      connectionId,
-      opponentConnectionId,
-      submissions,
-      currentRound
+    // Step 3: We ARE the last player - handle game progression
+    console.log(
+      `Both players finished round ${currentRound}, progressing game`
     );
 
-    console.log(`Both players finished round ${currentRound}`);
-
-    // Get the updated A record
-    const updatedARecord = updatedRecords.find(
-      (record) => record.sort_key === "A"
-    );
-    const nextRound = updatedARecord?.current_round || currentRound + 1;
+    const nextRound = currentRound + 1;
 
     // Check if game is over (5 rounds total, so after round 5)
     if (nextRound > 5) {
       console.log("Game over - all 5 rounds completed");
+
+      // Calculate final scores from all rounds
+      const updatedRecords = await updateGame(
+        gameId,
+        connectionId,
+        opponentConnectionId,
+        submissions,
+        currentRound,
+        true // isGameOver flag
+      );
 
       // Get both player records for final scores
       const player1Record = updatedRecords.find(
@@ -172,8 +209,16 @@ export const handler = async (
       };
     }
 
-    // More rounds to play - get next word
-    const nextWord = updatedARecord?.words?.[nextRound - 1]; // Array is 0-indexed, rounds are 1-indexed
+    // More rounds to play - reset state and get next word
+    await resetRoundState(
+      gameId,
+      connectionId,
+      opponentConnectionId,
+      nextRound
+    );
+
+    // Get next word from A record
+    const nextWord = aRecord.words?.[nextRound - 1]; // Array is 0-indexed, rounds are 1-indexed
 
     if (!nextWord) {
       console.error("Next word not found");

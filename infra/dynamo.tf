@@ -66,6 +66,19 @@ module "matchmaking_table" {
     {
       name = "time_joined"
       type = "S"
+    },
+    {
+      name = "connection_id"
+      type = "S"
+    }
+  ]
+
+  global_secondary_indexes = [
+    {
+      name = "connection_id_index"
+      hash_key = "connection_id"
+      range_key = "time_joined"
+      projection_type = "KEYS_ONLY"
     }
   ]
 

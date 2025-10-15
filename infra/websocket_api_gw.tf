@@ -30,5 +30,11 @@ module "websocket_api" {
       lambda_function_name = module.finish_round_lambda.name
       authorization_type   = "NONE"
     },
+    {
+      route_key            = "$disconnect"
+      lambda_invoke_arn    = module.disconnect_lambda.invoke_arn
+      lambda_function_name = module.disconnect_lambda.name
+      authorization_type   = "NONE"
+    },
   ]
 }
