@@ -58,7 +58,7 @@ export const MultiplayerGameClient = ({
   const [gameScore, setGameScore] = useState(0);
   const [opponentScore, setOpponentScore] = useState(0);
   const [roundScore, setRoundScore] = useState(0);
-  const [roundTimeLeft, setRoundTimeLeft] = useState(60);
+  const [roundTimeLeft, setRoundTimeLeft] = useState(30);
 
   // Answer tracking
   const [correctStrongestMatches, setCorrectStrongestMatches] = useState<
@@ -155,7 +155,7 @@ export const MultiplayerGameClient = ({
             setGamePhase("between_rounds");
 
             // Reset round-specific state
-            setRoundTimeLeft(60);
+            setRoundTimeLeft(30);
             setCorrectStrongestMatches([]);
             setCorrectStrongMatches([]);
             setCorrectWeakMatches([]);
@@ -535,8 +535,8 @@ export const MultiplayerGameClient = ({
           <p
             className={cn(
               "font-semibold text-2xl transition-colors",
-              roundTimeLeft <= 30 && "text-yellow-500",
-              roundTimeLeft <= 10 && "text-red-500"
+              roundTimeLeft <= 15 && "text-yellow-500",
+              roundTimeLeft <= 5 && "text-red-500"
             )}
           >
             00:{formattedTimeLeft}
