@@ -106,10 +106,13 @@ export const StandardGameClient = () => {
             // Track correct answers by strength
             if (points === 3) {
                 setCorrectStrongestMatches(prev => [...prev, normalizedAnswer]);
+                setRoundTimeLeft(prev => prev + 10);
             } else if (points === 2) {
                 setCorrectStrongMatches(prev => [...prev, normalizedAnswer]);
+                setRoundTimeLeft(prev => prev + 5);
             } else if (points === 1) {
                 setCorrectWeakMatches(prev => [...prev, normalizedAnswer]);
+                setRoundTimeLeft(prev => prev + 3);
             }
         } else {
             setIncorrectAnswers(prev => [...prev, normalizedAnswer]);
