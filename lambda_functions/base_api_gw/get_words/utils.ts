@@ -6,11 +6,11 @@ import {
 import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
 
 const client = new DynamoDBClient({});
-const { WORD_BANK_TABLE_NAME } = process.env;
+const { WORD_BANK_TABLE_NAME, ID_STATUS_TABLE_NAME } = process.env;
 
 export const getCurrentId = async (): Promise<number> => {
   const queryCommand = new QueryCommand({
-    TableName: WORD_BANK_TABLE_NAME,
+    TableName: ID_STATUS_TABLE_NAME,
     KeyConditionExpression: "metric_name = :metricName",
     ExpressionAttributeValues: marshall({
       ":metricName": "word_bank_current_id",

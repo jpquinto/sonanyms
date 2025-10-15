@@ -8,11 +8,11 @@ import { getCurrentId, getQuestionsBatch } from "./utils";
 export const handler = async (
   event: APIGatewayProxyEvent
 ): Promise<APIGatewayProxyResult> => {
-  console.log("Received GET /words request:", JSON.stringify(event, null, 2));
+  console.log("Received GET /get-words request:", JSON.stringify(event, null, 2));
 
   try {
     // Get the batch_size from query parameters (default to 10)
-    const batchSize = parseInt(event.queryStringParameters?.batch_size || "10");
+    const batchSize = parseInt(event.queryStringParameters?.batch_size || "5");
 
     if (batchSize < 1 || batchSize > 50) {
       return {

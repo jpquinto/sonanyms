@@ -3,7 +3,6 @@ variable "context" {
   type        = any
 }
 
-
 variable "api_name" {
   description = "Name of the api"
   type        = string
@@ -27,6 +26,7 @@ variable "http_routes" {
     execution_role_arn   = optional(string)
     enable_cors_all      = bool
     use_authorizer       = bool
+    authorizer_id        = optional(string)  # Add this - ID of the authorizer to use
     cache_key_parameters = optional(list(string), [])
     request_parameters   = optional(map(bool))
   }))
@@ -49,7 +49,7 @@ variable "vpc_endpoint_ids" {
 }
 
 variable "lambda_authorizer" {
-  description = "Lambda authorizer configuration"
+  description = "Lambda authorizer configuration (deprecated - use authorizer_id in routes)"
   type = object({
     name       = string
     invoke_arn = string
@@ -68,7 +68,6 @@ variable "cognito_authorizer" {
 }
 
 # API KEY
-
 variable "enable_api_key" {
   type    = bool
   default = false

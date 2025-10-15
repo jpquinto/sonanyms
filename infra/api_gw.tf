@@ -13,10 +13,11 @@ module "user_api_gw" {
       lambda_invoke_arn    = module.get_words_lambda.invoke_arn
       lambda_function_name = module.get_words_lambda.name
       enable_cors_all      = true
-      use_authorizer       = false
+      use_authorizer       = true
+      authorizer_id        = module.user_lambda_authorizer.authorizer_id
     },
   ]
-  authorizer_type = "COGNITO_USER_POOLS"
+  authorizer_type = "CUSTOM"
   api_type        = ["REGIONAL"]
 }
 

@@ -34,7 +34,8 @@ module "api_lambda_integration" {
   lambda_invoke_arn    = each.value.lambda_invoke_arn
   lambda_function_name = each.value.lambda_function_name
 
-  authorizer_type   = "NONE"
+  authorizer_type   = each.value.use_authorizer && each.value.authorizer_id != null ? "CUSTOM" : "NONE"
+  authorizer_id     = each.value.use_authorizer ? each.value.authorizer_id : null
   api_execution_arn = aws_api_gateway_rest_api.api.execution_arn
   enable_cors_all   = each.value.enable_cors_all
   enable_api_key    = var.enable_api_key
