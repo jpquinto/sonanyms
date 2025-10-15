@@ -1,13 +1,9 @@
 import {
-  BatchGetItemCommand,
-  BatchWriteItemCommand,
   DeleteItemCommand,
   DynamoDBClient,
-  PutItemCommand,
   QueryCommand,
 } from "@aws-sdk/client-dynamodb";
 import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
-import { randomUUID } from "crypto";
 
 const client = new DynamoDBClient({});
 

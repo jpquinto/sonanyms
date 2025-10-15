@@ -153,8 +153,9 @@ export const MultiplayerGameClient = ({
             setCurrentWord(data.word);
             setStartTimestamp(data.start_timestamp);
             setGamePhase("between_rounds");
-
+            
             // Reset round-specific state
+            setUserAnswer("");
             setRoundTimeLeft(30);
             setCorrectStrongestMatches([]);
             setCorrectStrongMatches([]);
@@ -182,6 +183,7 @@ export const MultiplayerGameClient = ({
             break;
 
           case "opponent_forfeit":
+            if (connectionStatus === "game_over") break; // Ignore if game already over
             console.log("Opponent forfeited");
             setConnectionStatus("opponent_forfeit");
             break;
@@ -524,7 +526,6 @@ export const MultiplayerGameClient = ({
     );
   }
 
-  const currentWordSynonymsMap = createSynonymsMap(currentWord);
   const formattedTimeLeft =
     roundTimeLeft < 10 ? `0${roundTimeLeft}` : roundTimeLeft;
 
