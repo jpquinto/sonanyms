@@ -8,6 +8,7 @@ import { Card } from "../ui/card";
 import { Input } from "../ui/input";
 import { cn } from "@/lib/utils";
 import { Badge } from "../ui/badge";
+import GameOver from "@/app/components/GameOver";
 
 export const StandardGameClient = () => {
 
@@ -28,6 +29,7 @@ export const StandardGameClient = () => {
     const [correctStrongMatches, setCorrectStrongMatches] = useState<string[]>([]);
     const [correctWeakMatches, setCorrectWeakMatches] = useState<string[]>([]);
     const [incorrectAnswers, setIncorrectAnswers] = useState<string[]>([]);
+    const [roundStats, setRoundStats] = useState<{ word: string; guesses: string[]; score: number }[]>([]);
 
     const currentWord = words[currentWordIndex];
 
@@ -52,12 +54,41 @@ export const StandardGameClient = () => {
 
     useEffect(() => {
         if (currentWordIndex >= 4) {
+            
+            if (currentWord && roundStats.length < 5) {
+                const allGuesses = [
+                    ...correctStrongestMatches,
+                    ...correctStrongMatches,
+                    ...correctWeakMatches,
+                    ...incorrectAnswers
+                ];
+                
+                setRoundStats(prev => [...prev, {
+                    word: currentWord.word,
+                    guesses: allGuesses,
+                    score: roundScore
+                }]);
+            }
             setGameOver(true);
             return;
         }
 
-        // Round over
+        
         if (roundTimeLeft === 0) {
+            
+            const allGuesses = [
+                ...correctStrongestMatches,
+                ...correctStrongMatches,
+                ...correctWeakMatches,
+                ...incorrectAnswers
+            ];
+            
+            setRoundStats(prev => [...prev, {
+                word: currentWord.word,
+                guesses: allGuesses,
+                score: roundScore
+            }]);
+            
             setCurrentWordIndex(prev => prev + 1);
             setRoundTimeLeft(60);
             setRoundScore(0);
@@ -81,7 +112,7 @@ export const StandardGameClient = () => {
     if (gameOver) {
         return (
             <div>
-                Game Over
+                <GameOver roundStats={roundStats} totalScore={gameScore} />
             </div>
         )
     }
