@@ -96,7 +96,7 @@ export const BOTS = {
         defeatMessage: "You got lucky this time. I'll be back.",
         victoryMessage: "That's how it's done! Nobody beats me!",
     }),
-    THEORDORE_BAGWELL: new Bot({
+    THEODORE_BAGWELL: new Bot({
         name: "Theodore Bagwell",
         profilePicture: "/bots/theodore_bagwell.png",
         strongestMatchChance: 0.1,

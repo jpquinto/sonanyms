@@ -3,12 +3,22 @@ import { S3Client, GetObjectCommand } from "@aws-sdk/client-s3";
 import { Readable } from "stream";
 import csv from "csv-parser";
 import { getCurrentId } from "./utils/get_current_id";
-import { getCategorizedSynonyms } from "./utils/get_synonyms";
+import { getChainWords } from "./utils/get_chain_words";
 import { addWordsToTable } from "./utils/add_words_to_table";
 import { updateCurrentId } from "./utils/update_current_id";
 
 // Initialize the S3 client
 const s3Client = new S3Client({});
+
+interface ChainLink {
+  word: string;
+  score: number;
+}
+
+interface ChainWordItem {
+  first_chain: string;
+  links: ChainLink[];
+}
 
 export const handler = async (event: S3Event) => {
   console.log("Received event:", JSON.stringify(event, null, 2));
@@ -19,11 +29,23 @@ export const handler = async (event: S3Event) => {
     const bucketName = record.s3.bucket.name;
     const fileKey = record.s3.object.key;
 
+    if (!fileKey.startsWith("chain_words")) {
+      console.log(
+        `Ignoring file '${fileKey}' as it is not in the 'chain_words' folder.`
+      );
+      return {
+        statusCode: 200,
+        body: JSON.stringify({
+          message: `File '${fileKey}' ignored. Not in 'chain_words' folder.`,
+        }),
+      };
+    }
+
     console.log(`Processing file '${fileKey}' from bucket '${bucketName}'`);
 
     // Get the current ID from DynamoDB
-    let currentId = await getCurrentId();
-    console.log(`Starting with ID: ${currentId}`);
+    const startingId = await getCurrentId();
+    console.log(`Starting with ID: ${startingId}`);
 
     // Get the CSV object from S3
     const getObjectParams = {
@@ -61,38 +83,40 @@ export const handler = async (event: S3Event) => {
         });
     });
 
-    // Process each word and get synonyms
-    const wordData = [];
+    // Process each word and get chain words
+    const wordData: ChainWordItem[] = [];
     let processedCount = 0;
     let errorCount = 0;
+    let skippedCount = 0;
 
     for (const word of words) {
       try {
         console.log(`Processing word: ${word}`);
 
-        // Get categorized synonyms for the word
-        const categorizedSynonyms = await getCategorizedSynonyms(word);
+        // Get chain words using our helper function
+        const chainWords = await getChainWords(word);
 
-        // Prepare the item data (will be batch written later)
-        const item = {
-          id: currentId,
-          word: word,
-          strongest: categorizedSynonyms.strongest,
-          strong: categorizedSynonyms.strong,
-          weak: categorizedSynonyms.weak,
-          all_synonyms: categorizedSynonyms.all,
-          created_at: new Date().toISOString(),
+        // If no chain words returned (didn't meet minimum requirements), skip
+        if (chainWords.length === 0) {
+          console.log(
+            `Skipping word '${word}' - did not meet minimum requirements`
+          );
+          skippedCount++;
+          continue;
+        }
+
+        // Prepare the item data with chain words and scores
+        const item: ChainWordItem = {
+          first_chain: word,
+          links: chainWords,
         };
 
         wordData.push(item);
         console.log(
-          `Successfully processed word '${word}' with ID ${currentId}`
+          `Successfully processed word '${word}' with ${chainWords.length} chain words`
         );
-        currentId++;
         processedCount++;
 
-        // Add a small delay to avoid rate limiting on the Datamuse API
-        await new Promise((resolve) => setTimeout(resolve, 100));
       } catch (error) {
         console.error(`Error processing word '${word}':`, error);
         errorCount++;
@@ -101,13 +125,12 @@ export const handler = async (event: S3Event) => {
     }
 
     console.log(
-      `Processing complete. Processed: ${processedCount}, Errors: ${errorCount}`
+      `Processing complete. Processed: ${processedCount}, Skipped: ${skippedCount}, Errors: ${errorCount}`
     );
 
     // Batch write words to DynamoDB
     if (wordData.length > 0) {
       console.log(`Writing ${wordData.length} words to DynamoDB...`);
-      const startingId = await getCurrentId(); // Get the starting ID again to ensure consistency
       const nextId = await addWordsToTable({
         words: wordData,
         currentId: startingId,
@@ -127,6 +150,7 @@ export const handler = async (event: S3Event) => {
       body: JSON.stringify({
         message: "File processed successfully!",
         processedCount,
+        skippedCount,
         errorCount,
         totalWords: words.length,
       }),

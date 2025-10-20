@@ -8,7 +8,7 @@ export default function BotGamePage() {
     <div>
       <BotGameClient 
         username="Guest"
-        bot={BOTS.THEORDORE_BAGWELL}
+        bot={BOTS.THEODORE_BAGWELL}
       />
     </div>
   );
