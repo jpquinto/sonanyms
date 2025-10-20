@@ -7,6 +7,7 @@ import GuessInput from "./GuessInput";
 import Guesses from "./Guesses";
 import ScoreBoard from "./ScoreBoard";
 import RoundSummary from "./RoundSummary";
+import GameOver from "./GameOver";
 // import { targetWords } from '../lib/mockData';
 
 export default function Game() {
@@ -45,6 +46,11 @@ export default function Game() {
 
     setGuess('');
     //incorporate logic later to check if the guess is correct
+    
+  }
+
+  if (gameOver) {
+    return <GameOver roundStats={roundStats} totalScore={score} />;
   }
 
   return (
