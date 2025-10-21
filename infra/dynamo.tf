@@ -109,6 +109,78 @@ module "matchmaking_table" {
   ttl_attribute = "ttl"
 }
 
+module "custom_lobby_matchmaking_table" {
+  source  = "./modules/dynamodb_table"
+  context = module.null_label.context
+
+  name = "sonanyms-custom-lobby-matchmaking-table"
+
+  billing_mode = "PAY_PER_REQUEST"
+
+  hash_key = "lobby_id"
+  range_key = "sort_key"
+
+  attributes = [
+    {
+      name = "lobby_id"
+      type = "S"
+    },
+    {
+      name = "sort_key"
+      type = "S"
+    },
+  ]
+
+  ttl_enabled = true
+  ttl_attribute = "ttl"
+}
+
+module "users_table" {
+  source  = "./modules/dynamodb_table"
+  context = module.null_label.context
+
+  name = "sonanyms-users-table"
+
+  billing_mode = "PAY_PER_REQUEST"
+
+  hash_key = "user_id"
+  range_key = "sort_key"
+
+  attributes = [
+    {
+      name = "user_id"
+      type = "S"
+    },
+    {
+      name = "sort_key"
+      type = "S"
+    },
+  ]
+}
+
+module "users_game_history_table" {
+  source  = "./modules/dynamodb_table"
+  context = module.null_label.context
+
+  name = "sonanyms-users-game-history-table"
+
+  billing_mode = "PAY_PER_REQUEST"
+
+  hash_key = "user_id"
+  range_key = "game_id"
+
+  attributes = [
+    {
+      name = "user_id"
+      type = "S"
+    },
+    {
+      name = "game_id"
+      type = "S"
+    },
+  ]
+}
+
 module "game_sessions_table" {
   source  = "./modules/dynamodb_table"
   context = module.null_label.context

@@ -34,8 +34,6 @@ export const FirstChainGameClient = () => {
 
   const currentChain = firstChains[currentWordIndex];
 
-  console.log(firstChains);
-
   const fetchFirstChains = async (excludeIds: number[] = []) => {
     setIsLoading(true);
     setError(null);

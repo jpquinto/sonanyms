@@ -11,6 +11,7 @@
     },
     "include": [
       "base_api_gw/**/*",
+      "webhook_api_gw/**/*",
       "websocket_api_gw/**/*",
       "word_bank_ingestion/**/*",
     ],
