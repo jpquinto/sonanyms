@@ -5,7 +5,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc",
-    "build:layer": "node build-layer.js"
+    "build:layer": "node build-layer.js",
+    "build:ws-layer": "node build-ws-layer.js"
   },
   "author": "",
   "license": "ISC",

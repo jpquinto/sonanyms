@@ -1,5 +1,5 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
-import { sendWsMessage } from "./utils/send_ws_message";
+const { sendWsMessage } = require("/opt/nodejs/send_ws_message");
 
 export const handler = async (
   event: APIGatewayProxyEvent

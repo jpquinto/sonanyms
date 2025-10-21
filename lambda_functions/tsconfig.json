@@ -14,6 +14,7 @@
       "webhook_api_gw/**/*",
       "websocket_api_gw/**/*",
       "word_bank_ingestion/**/*",
+      "layers/**/*"
     ],
     "exclude": [
       "dist",

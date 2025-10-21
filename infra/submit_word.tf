@@ -12,7 +12,9 @@ module "submit_word_lambda" {
   deployment_type = "zip"
   zip_project     = true
 
-  layers = []
+  layers = [
+    module.websocket_lambda_layer.layer_arn
+  ]
 
   environment_variables = {
     REGION : var.aws_region

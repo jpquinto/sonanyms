@@ -13,7 +13,8 @@ module "join_queue_lambda" {
   zip_project     = true
 
   layers = [
-    module.shared_lambda_layer.layer_arn
+    module.shared_lambda_layer.layer_arn,
+    module.websocket_lambda_layer.layer_arn,
   ]
 
   environment_variables = {

@@ -155,14 +155,27 @@ module "users_table" {
       name = "sort_key"
       type = "S"
     },
+    {
+      name = "clerk_sub"
+      type = "S"
+    }
+  ]
+
+  global_secondary_indexes = [
+    {
+      name = "clerk_sub_index"
+      hash_key = "clerk_sub"
+      range_key = "sort_key"
+      projection_type = "ALL"
+    }
   ]
 }
 
-module "users_game_history_table" {
+module "user_game_history_table" {
   source  = "./modules/dynamodb_table"
   context = module.null_label.context
 
-  name = "sonanyms-users-game-history-table"
+  name = "sonanyms-user-game-history-table"
 
   billing_mode = "PAY_PER_REQUEST"
 

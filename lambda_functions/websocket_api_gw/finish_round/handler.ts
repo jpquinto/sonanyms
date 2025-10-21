@@ -1,5 +1,4 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
-import { sendWsMessage } from "./utils/send_ws_message";
 import {
   getGame,
   updatePlayerStatus,
@@ -7,6 +6,7 @@ import {
   resetRoundState,
   updateGame,
 } from "./utils/db";
+const { sendWsMessage } = require("/opt/nodejs/send_ws_message");
 
 interface Submission {
   word: string;

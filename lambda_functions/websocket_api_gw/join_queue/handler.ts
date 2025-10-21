@@ -1,6 +1,6 @@
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from "aws-lambda";
 import { addToQueue, addToSessionsTable, checkQueue, getCurrentId, getQuestionsBatch, removeFromQueue } from "./utils/db";
-import { sendWsMessage } from "./utils/send_ws_message";
+const { sendWsMessage } = require("/opt/nodejs/send_ws_message");
 
 export const handler = async (
   event: APIGatewayProxyEvent
@@ -155,7 +155,7 @@ export const handler = async (
     return {
       statusCode: 500,
       body: JSON.stringify({
-        message: "Failed to connect",
+        message: "Failed to join queue",
       }),
     };
   }

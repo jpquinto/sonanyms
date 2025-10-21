@@ -1,7 +1,7 @@
 
 module "get_words_lambda" {
-  source  = "./modules/lambda"
-  context = module.null_label.context
+  source  = "../modules/lambda"
+  context = var.context
 
   name            = "get-words-lambda"
   handler         = "handler.handler"
@@ -18,10 +18,8 @@ module "get_words_lambda" {
   ipv6_allowed_for_dual_stack = false
 
   environment_variables = {
-    REGION : var.aws_region
-    AWS_ACCOUNT_ID : local.account_id
-    ID_STATUS_TABLE_NAME : module.id_status_table.name
-    WORD_BANK_TABLE_NAME : module.word_bank_table.name
+    ID_STATUS_TABLE_NAME : var.id_status_table_name,
+    WORD_BANK_TABLE_NAME : var.word_bank_table_name,
   }
 }
 
@@ -38,8 +36,8 @@ resource "aws_iam_policy" "get_words_policy" {
           "dynamodb:*",
         ],
         Resource = [
-            module.word_bank_table.arn,
-            module.id_status_table.arn,
+            var.word_bank_table_arn,
+            var.id_status_table_arn,
         ]
       },
     ]
