@@ -109,11 +109,11 @@ module "matchmaking_table" {
   ttl_attribute = "ttl"
 }
 
-module "custom_lobby_matchmaking_table" {
+module "custom_lobby_table" {
   source  = "./modules/dynamodb_table"
   context = module.null_label.context
 
-  name = "sonanyms-custom-lobby-matchmaking-table"
+  name = "sonanyms-custom-lobby-table"
 
   billing_mode = "PAY_PER_REQUEST"
 

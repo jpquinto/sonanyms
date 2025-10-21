@@ -10,6 +10,7 @@ import {
 } from "@clerk/nextjs";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
+import Navbar from "@/components/navbar";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -44,7 +45,10 @@ export default function RootLayout({
               enableSystem
               disableTransitionOnChange
               >
-            {children}
+            <div className="relative">
+              <Navbar />
+              {children}
+            </div>
           </ThemeProvider>
         </body>
       </html>
