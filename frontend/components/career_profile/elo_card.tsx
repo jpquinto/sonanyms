@@ -63,13 +63,12 @@ export function EloCard({ title, elo, rank }: EloCardProps) {
               </div>
               <p className="text-xs text-muted-foreground mt-1">
                 {elo - progressInfo.currentRankMin} /{" "}
-                {progressInfo.nextRankThreshold - progressInfo.currentRankMin}{" "}
-                points
+                {progressInfo.nextRankThreshold - progressInfo.currentRankMin}
               </p>
             </>
           ) : (
             <p className="text-sm text-green-400 font-semibold">
-              Highest Rank Achieved!
+              MAX RANK
             </p>
           )}
         </div>

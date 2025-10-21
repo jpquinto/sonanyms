@@ -5,10 +5,17 @@ import axios from "axios";
 const BACKEND_API_URL = process.env.BACKEND_API_URL!;
 const USER_API_KEY = process.env.USER_API_KEY!;
 
+interface RoundInfo {
+  word: string;
+  score: number;
+}
+
 interface AddGameResponse {
   success: boolean;
   message?: string;
   game_id?: string;
+  elo_change?: number;
+  new_elo?: number;
   error?: string;
   statusCode?: number;
 }
@@ -16,12 +23,12 @@ interface AddGameResponse {
 export const addSinglePlayerGame = async (
   user_id: string,
   game_mode: string,
-  round_info: { word: string; score: number },
+  round_info: RoundInfo[],
   final_score: number
 ): Promise<AddGameResponse> => {
   try {
     const response = await axios.post(
-      `${BACKEND_API_URL}/game-history`,
+      `${BACKEND_API_URL}/add-single-player-game`,
       {
         user_id,
         game_mode,
@@ -33,7 +40,7 @@ export const addSinglePlayerGame = async (
           "Content-Type": "application/json",
           "x-api-key": USER_API_KEY,
         },
-        timeout: 10000, // 10 second timeout
+        timeout: 10000,
       }
     );
 
@@ -41,6 +48,8 @@ export const addSinglePlayerGame = async (
       success: true,
       message: response.data.message,
       game_id: response.data.game_id,
+      elo_change: response.data.elo_change,
+      new_elo: response.data.new_elo,
       statusCode: response.status,
     };
   } catch (error) {

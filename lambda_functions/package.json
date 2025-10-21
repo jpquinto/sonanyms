@@ -6,7 +6,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc",
     "build:layer": "node build-layer.js",
-    "build:ws-layer": "node build-ws-layer.js"
+    "build:ws-layer": "node build-ws-layer.js",
+    "build:elo-layer": "node build-elo-layer.js"
   },
   "author": "",
   "license": "ISC",

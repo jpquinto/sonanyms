@@ -47,3 +47,8 @@ variable "shared_layer_arn" {
     description = "The ARN of the shared Lambda layer."
     type        = string
 }
+
+variable "elo_layer_arn" {
+    description = "The ARN of the ELO logic Lambda layer."
+    type        = string
+}

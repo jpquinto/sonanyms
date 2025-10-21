@@ -192,6 +192,9 @@ module "user_game_history_table" {
       type = "S"
     },
   ]
+
+  ttl_enabled = true
+  ttl_attribute = "ttl"
 }
 
 module "game_sessions_table" {

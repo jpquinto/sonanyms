@@ -5,7 +5,6 @@ import { Loader2, RefreshCw, User } from "lucide-react";
 import { AvatarEmblem } from "../ui/avatar-emblem";
 import { Card } from "../ui/card";
 import { getRankFromElo } from "@/utils/rank_elo_helpers";
-import { Rank } from "@/types/rank";
 import { EloCard } from "./elo_card";
 
 export function CareerProfile() {
@@ -117,7 +116,7 @@ export function CareerProfile() {
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <EloCard
-                title="Single Player"
+                title="Solo"
                 elo={1800}
                 rank={"diamond"}
               />

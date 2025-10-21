@@ -18,11 +18,13 @@ module "add_single_player_game_lambda" {
   ipv6_allowed_for_dual_stack = false
 
   layers = [
-    var.shared_layer_arn
+    var.shared_layer_arn,
+    var.elo_layer_arn,
   ]
 
   environment_variables = {
     USER_GAME_HISTORY_TABLE_NAME : var.user_game_history_table_name,
+    USERS_TABLE_NAME : var.users_table_name,
   }
 }
 
@@ -39,7 +41,8 @@ resource "aws_iam_policy" "add_single_player_game_policy" {
           "dynamodb:*",
         ],
         Resource = [
-            var.user_game_history_table_arn
+            var.user_game_history_table_arn,
+            var.users_table_arn
         ]
       },
     ]

@@ -17,4 +17,5 @@ module "base_api_gw" {
     id_status_table_arn  = module.id_status_table.arn
 
     shared_layer_arn = module.shared_lambda_layer.layer_arn
+    elo_layer_arn    = module.elo_layer.layer_arn
 }
