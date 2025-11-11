@@ -19,7 +19,7 @@ export function EloCard({ title, elo, rank }: EloCardProps) {
 
   return (
     <Card className="p-6 bg-accent/10 border-accent/20 shadow-lg">
-      <h3 className="text-lg font-semibold text-foreground mb-4">{title}</h3>
+      <h3 className="text-lg font-semibold text-foreground">{title}</h3>
       <div className="flex items-start gap-6">
         <div
           className={cn(

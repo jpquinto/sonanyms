@@ -16,7 +16,7 @@ class UserCache {
   private isClient = typeof window !== "undefined";
   private readonly CACHE_KEY = "user_info";
 
-  set(data: UserInfo, ttlHours: number = 24) {
+  set(data: UserInfo, ttlHours: number = 1) {
     if (!this.isClient) return;
 
     const item: CacheItem<UserInfo> = {

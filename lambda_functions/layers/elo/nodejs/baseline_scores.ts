@@ -1,4 +1,3 @@
-// lib/elo/baseline-scores.ts
 
 export type GameMode = "synonyms-solo";
 export type Rank =
@@ -26,7 +25,7 @@ export const BASELINE_SCORES: BaselineScores = {
     gold: 40,
     diamond: 60,
     master: 80,
-    champion: 90,
+    champion: 100,
   },
 };
 

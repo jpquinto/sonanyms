@@ -74,7 +74,7 @@ export function CareerProfile() {
   return (
     <div className="min-h-[100dvh] bg-gradient-to-b from-background to-secondary-background py-8 px-4 flex justify-center items-center">
       <div className="min-w-2xl max-w-4xl mx-auto">
-        <Card className="bg-secondary-background border-white shadow-lg overflow-hidden pt-0">
+        <Card className="bg-secondary-background border-white shadow-lg overflow-hidden py-0">
           {/* Header Section */}
           <div className="bg-accent px-8 py-12 shadow-xl">
             <div className="flex items-center gap-6">
@@ -117,13 +117,13 @@ export function CareerProfile() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <EloCard
                 title="Solo"
-                elo={1800}
-                rank={"diamond"}
+                elo={singlePlayerElo}
+                rank={singlePlayerRank}
               />
               <EloCard
                 title="Multiplayer"
-                elo={3450}
-                rank={"champion"}
+                elo={multiplayerElo}
+                rank={multiplayerRank}
               />
             </div>
           </div>
